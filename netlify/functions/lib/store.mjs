@@ -4,9 +4,15 @@ const DATA_KEY = "subscriptions_encrypted_v1";
 const FX_KEY = "fx_cache_v1";
 
 function store() {
-  return getStore({
-    name: process.env.NETLIFY_BLOB_STORE || "simple-sub-tracker-private"
-  });
+  const name = process.env.NETLIFY_BLOB_STORE || "simple-sub-tracker-private";
+  const siteID = process.env.NETLIFY_SITE_ID;
+  const token = process.env.NETLIFY_AUTH_TOKEN;
+
+  if (siteID && token) {
+    return getStore({ name, siteID, token });
+  }
+
+  return getStore({ name });
 }
 
 export async function readEncryptedSubscriptions() {
